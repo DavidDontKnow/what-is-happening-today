@@ -2,6 +2,53 @@
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
 $(function () {
+  displayTime()
+  setInterval(displayTime, 1000);
+
+  function displayTime() {
+    var currentTime = $("#currentDay")
+    var current = dayjs().format('MMM DD, YYYY [at] hh:mm:ss a');
+    currentTime.text(current);
+  }
+  $(".saveBtn").on("click", function () {
+    // Get nearby values of the description in JQuery
+    var text = $(this).siblings(".description").val();
+    var time = $(this).parent().attr("id");
+
+    // Save text in local storage
+    localStorage.setItem(time, text);
+  })
+
+
+  function timeTracker() {
+    //get current number of hours.
+    var timeNow = dayjs().hour();
+
+    // loop over time blocks
+    $(".time-block").each(function () {
+      var blockTime = parseInt($(this).attr("id").split("-")[1]);
+
+      // To check the time and add the classes for background indicators
+      if (blockTime < timeNow) {
+        $(this).removeClass("future");
+        $(this).removeClass("present");
+        $(this).addClass("past");
+      }
+      else if (blockTime === timeNow) {
+        $(this).removeClass("past");
+        $(this).removeClass("future");
+        $(this).addClass("present");
+      }
+      else {
+        $(this).removeClass("present");
+        $(this).removeClass("past");
+        $(this).addClass("future");
+
+      }
+    })
+  }
+
+  timeTracker()
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
